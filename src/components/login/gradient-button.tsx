@@ -8,11 +8,13 @@ import { Gradients } from '@/constants/theme';
 type GradientButtonProps = PressableProps & {
   label: string;
   icon?: keyof typeof Ionicons.glyphMap;
+  colors?: readonly [string, string, ...string[]];
 };
 
 export function GradientButton({
   label,
   icon,
+  colors = Gradients.brand,
   className,
   ...pressableProps
 }: GradientButtonProps) {
@@ -21,7 +23,7 @@ export function GradientButton({
       className={['active:opacity-85', className].filter(Boolean).join(' ')}
       {...pressableProps}>
       <LinearGradient
-        colors={Gradients.brand}
+        colors={colors}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         className="flex-row items-center justify-center gap-two rounded-two py-three">

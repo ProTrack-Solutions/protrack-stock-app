@@ -70,4 +70,7 @@ export const MaxContentWidth = 800;
  */
 export const Gradients = {
   brand: ['#4F63F0', '#7C4FE0', '#B34FE0'] as const,
+  primary: ['#3c87f7', '#5BA8F5'] as const,
 } as const;
+
+export const BrandColor = '#3c87f7';

@@ -11,3 +11,17 @@ export interface LoginRequest {
   password: string;
   aud: string;
 }
+
+/** Resposta de GET /me. */
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  username: string;
+  role: string;
+  company_id: string;
+  department_id: string;
+  department_name: string;
+  /** Módulos liberados para o departamento. ADMIN tem acesso a tudo. */
+  modules: string[] | null;
+}

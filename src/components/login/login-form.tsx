@@ -1,40 +1,41 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { Pressable, Text, View } from "react-native";
 
 import { GradientButton } from "@/components/login/gradient-button";
 import { TextField } from "@/components/login/text-field";
 import { ThemedText } from "@/components/themed-text";
-import { LoginRequest } from "@/interfaces/auth.interface";
-import { Login } from "@/service/auth.service";
-import axios from "axios";
-import { Controller, useForm } from "react-hook-form";
+import { useAuth } from "@/contexts/auth-context";
+import { getLoginErrorMessage } from "@/service/auth.service";
+
+type LoginFormValues = {
+  email: string;
+  password: string;
+};
 
 /**
- * Credentials form. Uncontrolled and inert by design — no state, validation
- * or submission wiring. That belongs to whichever screen adds auth behavior.
+ * Credentials form. On success the session switches to authenticated and the
+ * root navigator moves to the protected `(app)` routes.
  */
 export function LoginForm() {
+  const { signIn } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const {
     control,
     handleSubmit,
-    formState: { errors },
-  } = useForm<LoginRequest>({
-    defaultValues: { email: "", password: "", aud: "protrack-stock-app" },
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormValues>({
+    defaultValues: { email: "", password: "" },
   });
 
-  const onSubmit = async (params: LoginRequest) => {
+  const onSubmit = async ({ email, password }: LoginFormValues) => {
+    setSubmitError(null);
     try {
-      const response = await Login({
-        aud: "protrack-stock-app",
-        email: params.email,
-        password: params.password,
-      });
-      console.log(response);
+      await signIn(email.trim(), password);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.log("Status:", error.response?.status);
-        console.log("Data:", JSON.stringify(error.response?.data, null, 2));
-      }
+      setSubmitError(getLoginErrorMessage(error));
     }
   };
 
@@ -52,7 +53,10 @@ export function LoginForm() {
       <Controller
         control={control}
         name="email"
-        rules={{ required: "E-mail é obrigatório" }}
+        rules={{
+          required: "E-mail é obrigatório",
+          pattern: { value: /^\S+@\S+\.\S+$/, message: "Informe um e-mail válido" },
+        }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextField
             label="E-mail ou usuário"
@@ -82,8 +86,12 @@ export function LoginForm() {
             label="Senha"
             icon="lock-closed-outline"
             placeholder="••••••••"
-            secureTextEntry
-            trailingIcon="eye-outline"
+            secureTextEntry={!showPassword}
+            trailingIcon={showPassword ? "eye-off-outline" : "eye-outline"}
+            onTrailingIconPress={() => setShowPassword((v) => !v)}
+            trailingIconAccessibilityLabel={
+              showPassword ? "Ocultar senha" : "Mostrar senha"
+            }
             onChangeText={onChange}
             onBlur={onBlur}
             value={value}
@@ -104,9 +112,20 @@ export function LoginForm() {
         <ThemedText type="linkPrimary">Esqueceu a senha?</ThemedText>
       </View>
 
+      {submitError && (
+        <View className="flex-row items-center gap-two rounded-two bg-[#FEECEC] px-three py-two">
+          <Ionicons name="alert-circle-outline" size={18} color="#DC2626" />
+          <ThemedText type="small" className="flex-1" style={{ color: "#B91C1C" }}>
+            {submitError}
+          </ThemedText>
+        </View>
+      )}
+
       <GradientButton
-        label="Entrar"
+        label={isSubmitting ? "Entrando..." : "Entrar"}
         icon="log-in-outline"
+        disabled={isSubmitting}
+        className={isSubmitting ? "opacity-70" : undefined}
         onPress={handleSubmit(onSubmit)}
       />
 
