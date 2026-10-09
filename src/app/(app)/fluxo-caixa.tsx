@@ -1,12 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
-import {
-  ActivityIndicator,
-  Pressable,
-  RefreshControl,
-  ScrollView,
-  View,
-} from "react-native";
+import { Pressable, RefreshControl, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { CategoryCard } from "@/components/cash-flow/category-card";
@@ -15,6 +9,7 @@ import { PeriodComparison } from "@/components/cash-flow/period-comparison";
 import { ThemedText } from "@/components/themed-text";
 import { LinearGradient } from "@/components/ui/linear-gradient";
 import { ScreenHeader } from "@/components/ui/screen-header";
+import { CashFlowSkeleton } from "@/components/cash-flow/cash-flow-skeleton";
 import { BrandColor, Gradients } from "@/constants/theme";
 import { useSideMenu } from "@/contexts/side-menu-context";
 import { useCashFlow } from "@/hooks/use-cash-flow";
@@ -72,9 +67,7 @@ export default function CashFlowScreen() {
       </View>
 
       {loading && !data ? (
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator color={BrandColor} />
-        </View>
+        <CashFlowSkeleton />
       ) : error && !data ? (
         <View className="flex-1 items-center justify-center gap-two p-four">
           <Ionicons name="cloud-offline-outline" size={28} color="#60646C" />

@@ -26,6 +26,10 @@ import { SearchInput } from "@/components/sale/search-input";
 import { ThemedText } from "@/components/themed-text";
 import { LinearGradient } from "@/components/ui/linear-gradient";
 import { ScreenHeader } from "@/components/ui/screen-header";
+import {
+  ReceivableListSkeleton,
+  ReceivableSummarySkeleton,
+} from "@/components/receivable/receivable-skeleton";
 import { BrandColor, Gradients } from "@/constants/theme";
 import { useSideMenu } from "@/contexts/side-menu-context";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
@@ -158,6 +162,7 @@ export default function ReceivablesScreen() {
         onEndReachedThreshold={0.4}
         ListHeaderComponent={
           <View className="mb-one gap-three">
+            {!summary && loading && <ReceivableSummarySkeleton />}
             {summary && <SummaryCard summary={summary} />}
 
             <Pressable
@@ -212,9 +217,7 @@ export default function ReceivablesScreen() {
         }
         ListEmptyComponent={
           loading ? (
-            <View className="items-center py-five">
-              <ActivityIndicator color={BrandColor} />
-            </View>
+            <ReceivableListSkeleton />
           ) : (
             <View className="items-center gap-two py-five">
               <Ionicons

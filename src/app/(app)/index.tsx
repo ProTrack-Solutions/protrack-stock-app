@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useState } from "react";
-import { ActivityIndicator, Alert, Pressable, RefreshControl, ScrollView, View } from "react-native";
+import { Alert, Pressable, RefreshControl, ScrollView, View } from "react-native";
 
 import { AccountsPayableCard } from "@/components/dashboard/accounts-payable-card";
 import { AlertsCard } from "@/components/dashboard/alerts-card";
@@ -14,6 +14,7 @@ import { StockValueCard } from "@/components/dashboard/stock-value-card";
 import { TopProductsCard } from "@/components/dashboard/top-products-card";
 import { ThemedText } from "@/components/themed-text";
 import { GradientHeader } from "@/components/ui/gradient-header";
+import { DashboardSkeleton } from "@/components/dashboard/dashboard-skeleton";
 import { BrandColor } from "@/constants/theme";
 import { useAuth } from "@/contexts/auth-context";
 import { useSideMenu } from "@/contexts/side-menu-context";
@@ -94,9 +95,9 @@ export default function HomeScreen() {
       </GradientHeader>
 
       {loading || !data ? (
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator color={BrandColor} />
-        </View>
+        <ScrollView scrollEnabled={false}>
+          <DashboardSkeleton />
+        </ScrollView>
       ) : (
         <ScrollView
           contentContainerClassName="w-full max-w-content self-center gap-three p-four"

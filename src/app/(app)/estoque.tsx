@@ -19,6 +19,7 @@ import { StockStats } from "@/components/stock/stock-stats";
 import { ThemedText } from "@/components/themed-text";
 import { LinearGradient } from "@/components/ui/linear-gradient";
 import { ScreenHeader } from "@/components/ui/screen-header";
+import { StockListSkeleton, StockStatsSkeleton } from "@/components/stock/stock-skeleton";
 import { BrandColor, Gradients, Spacing } from "@/constants/theme";
 import { useSideMenu } from "@/contexts/side-menu-context";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
@@ -109,6 +110,7 @@ export default function StockScreen() {
         onEndReachedThreshold={0.4}
         ListHeaderComponent={
           <View className="mb-one gap-three">
+            {!stats && loading && <StockStatsSkeleton />}
             {stats && (
               <StockStats
                 stats={stats}
@@ -138,9 +140,7 @@ export default function StockScreen() {
         }
         ListEmptyComponent={
           loading ? (
-            <View className="items-center py-five">
-              <ActivityIndicator color={BrandColor} />
-            </View>
+            <StockListSkeleton />
           ) : (
             <View className="items-center gap-two py-five">
               <Ionicons name={error ? "cloud-offline-outline" : "cube-outline"} size={28} color="#60646C" />

@@ -14,6 +14,7 @@ import { ClientSelect } from "@/components/sale/client-select";
 import { parseNumber } from "@/components/sale/number-field";
 import { PAYMENT_METHODS } from "@/components/sale/payment-method-grid";
 import { ThemedText } from "@/components/themed-text";
+import { Skeleton } from "@/components/ui/skeleton";
 import { LinearGradient } from "@/components/ui/linear-gradient";
 import { Gradients, Spacing } from "@/constants/theme";
 import type { CompanyPaymentMethod } from "@/interfaces/receivable.interface";
@@ -222,7 +223,7 @@ export function PaymentSheet({
                   Saldo devedor
                 </ThemedText>
                 {balance === null ? (
-                  <ActivityIndicator size="small" />
+                  <Skeleton className="h-4 w-20" />
                 ) : (
                   <ThemedText type="smallBold" className="text-brand">
                     {formatCurrency(balance)}

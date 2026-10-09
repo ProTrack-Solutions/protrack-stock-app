@@ -27,6 +27,10 @@ import {
 import { ThemedText } from "@/components/themed-text";
 import { LinearGradient } from "@/components/ui/linear-gradient";
 import { ScreenHeader } from "@/components/ui/screen-header";
+import {
+  SalesListSkeleton,
+  SalesStatsSkeleton,
+} from "@/components/sales-list/sales-skeleton";
 import { BrandColor, Gradients, Spacing } from "@/constants/theme";
 import { useSideMenu } from "@/contexts/side-menu-context";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
@@ -185,6 +189,7 @@ export default function SalesListScreen() {
         onEndReachedThreshold={0.4}
         ListHeaderComponent={
           <View className="mb-one gap-three">
+            {!stats && loading && <SalesStatsSkeleton />}
             {stats && <SalesStatsGrid stats={stats} />}
             <ScrollView
               horizontal
@@ -226,9 +231,7 @@ export default function SalesListScreen() {
         }
         ListEmptyComponent={
           loading ? (
-            <View className="items-center py-five">
-              <ActivityIndicator color={BrandColor} />
-            </View>
+            <SalesListSkeleton />
           ) : (
             <View className="items-center gap-two py-five">
               <Ionicons

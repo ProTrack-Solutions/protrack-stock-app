@@ -12,6 +12,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { CustomerDetailSheet } from "@/components/customer/customer-detail-sheet";
 import { CustomerRow } from "@/components/customer/customer-row";
+import {
+  CustomerListSkeleton,
+  CustomerStatsSkeleton,
+} from "@/components/customer/customer-skeleton";
 import { SearchInput } from "@/components/sale/search-input";
 import {
   periodStartDate,
@@ -54,6 +58,7 @@ export default function CustomersScreen() {
   const {
     customers,
     stats,
+    statsLoading,
     hasMore,
     loading,
     loadingMore,
@@ -133,6 +138,7 @@ export default function CustomersScreen() {
         onEndReachedThreshold={0.4}
         ListHeaderComponent={
           <View className="mb-one gap-three">
+            {!stats && statsLoading && <CustomerStatsSkeleton />}
             {stats && (
               <View className="flex-row gap-two">
                 <StatCard
@@ -186,9 +192,7 @@ export default function CustomersScreen() {
         }
         ListEmptyComponent={
           loading ? (
-            <View className="items-center py-five">
-              <ActivityIndicator color={BrandColor} />
-            </View>
+            <CustomerListSkeleton />
           ) : (
             <View className="items-center gap-two py-five">
               <Ionicons

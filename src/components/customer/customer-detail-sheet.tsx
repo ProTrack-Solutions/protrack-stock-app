@@ -15,6 +15,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { canAccess } from "@/components/side-menu/menu-items";
 import { ThemedText } from "@/components/themed-text";
+import { Skeleton } from "@/components/ui/skeleton";
 import { LinearGradient } from "@/components/ui/linear-gradient";
 import { Gradients, Spacing } from "@/constants/theme";
 import { useAuth } from "@/contexts/auth-context";
@@ -425,7 +426,7 @@ function InfoRow({
       </ThemedText>
       <View className="flex-1 items-end">
         {loading ? (
-          <ActivityIndicator size="small" />
+          <Skeleton className="h-4 w-16" />
         ) : (
           <ThemedText
             type={mono ? "code" : "smallBold"}

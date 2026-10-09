@@ -31,6 +31,7 @@ export function useCustomers(filters: CustomerFilters) {
 
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [stats, setStats] = useState<CustomerStats | null>(null);
+  const [statsLoading, setStatsLoading] = useState(true);
   const [page, setPage] = useState(1);
   // `total_pages` da API ignora os filtros: há mais páginas enquanto vierem páginas cheias.
   const [hasMore, setHasMore] = useState(false);
@@ -81,6 +82,8 @@ export function useCustomers(filters: CustomerFilters) {
       setStats(await GetCustomerStats());
     } catch {
       // Os cards somem, mas a lista continua utilizável.
+    } finally {
+      setStatsLoading(false);
     }
   }, []);
 
@@ -139,6 +142,7 @@ export function useCustomers(filters: CustomerFilters) {
   return {
     customers,
     stats,
+    statsLoading,
     hasMore,
     loading,
     loadingMore,
