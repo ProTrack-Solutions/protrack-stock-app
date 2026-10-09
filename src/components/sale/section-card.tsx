@@ -8,6 +8,7 @@ import { BrandColor } from "@/constants/theme";
 type SectionCardProps = ViewProps & {
   title: string;
   icon?: keyof typeof Ionicons.glyphMap;
+  iconColor?: string;
   /** Rendered on the right side of the header, e.g. a counter badge. */
   right?: ReactNode;
 };
@@ -15,6 +16,7 @@ type SectionCardProps = ViewProps & {
 export function SectionCard({
   title,
   icon,
+  iconColor = BrandColor,
   right,
   className,
   children,
@@ -29,7 +31,7 @@ export function SectionCard({
     >
       <View className="flex-row items-center justify-between">
         <View className="flex-row items-center gap-two">
-          {icon && <Ionicons name={icon} size={18} color={BrandColor} />}
+          {icon && <Ionicons name={icon} size={18} color={iconColor} />}
           <ThemedText className="font-bold">{title}</ThemedText>
         </View>
         {right}
