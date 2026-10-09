@@ -48,7 +48,7 @@ export function LoginHero() {
           Sistema de gestão empresarial
         </ThemedText>
         <ThemedText type="title" className="text-white/90 text-[22px] leading-7">
-          Pro Track
+          ProTrack Gerencial
         </ThemedText>
         <ThemedText className="text-white/85">
           Acesse sua conta e continue gerenciando seu negócio com controle, eficiência e

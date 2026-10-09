@@ -10,6 +10,27 @@ const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 const ACCESS_TOKEN_KEY = "protrack_access_token";
 const REFRESH_TOKEN_KEY = "protrack_refresh_token";
 
+export const tokenStorage = {
+  getAccessToken: () => SecureStore.getItemAsync(ACCESS_TOKEN_KEY),
+  getRefreshToken: () => SecureStore.getItemAsync(REFRESH_TOKEN_KEY),
+  async save(accessToken: string, refreshToken?: string) {
+    await SecureStore.setItemAsync(ACCESS_TOKEN_KEY, accessToken);
+    if (refreshToken) {
+      await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, refreshToken);
+    }
+  },
+  async clear() {
+    await SecureStore.deleteItemAsync(ACCESS_TOKEN_KEY);
+    await SecureStore.deleteItemAsync(REFRESH_TOKEN_KEY);
+  },
+};
+
+// Chamado quando o refresh falha e a sessão é encerrada (ex: AuthProvider desloga).
+let onSessionExpired: (() => void) | null = null;
+export function setSessionExpiredHandler(handler: (() => void) | null) {
+  onSessionExpired = handler;
+}
+
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 15000,
@@ -20,7 +41,7 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
-    const token = await SecureStore.getItemAsync(ACCESS_TOKEN_KEY);
+    const token = await tokenStorage.getAccessToken();
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -50,7 +71,10 @@ apiClient.interceptors.response.use(
       _retry?: boolean;
     };
 
-    if (error.response?.status !== 401 || originalRequest._retry) {
+    // Rotas de /auth (login, refresh...) devolvem 401 por credenciais inválidas,
+    // não por token expirado — repassa o erro original para quem chamou.
+    const isAuthRoute = originalRequest?.url?.startsWith("/auth/");
+    if (error.response?.status !== 401 || originalRequest._retry || isAuthRoute) {
       return Promise.reject(error);
     }
 
@@ -67,26 +91,22 @@ apiClient.interceptors.response.use(
     isRefreshing = true;
 
     try {
-      const refreshToken = await SecureStore.getItemAsync(REFRESH_TOKEN_KEY);
+      const refreshToken = await tokenStorage.getRefreshToken();
       if (!refreshToken) throw new Error("No refresh token available");
 
       const { data } = await axios.post(`${API_BASE_URL}/auth/refresh`, {
         refresh_token: refreshToken,
       });
 
-      await SecureStore.setItemAsync(ACCESS_TOKEN_KEY, data.access_token);
-      if (data.refresh_token) {
-        await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, data.refresh_token);
-      }
+      await tokenStorage.save(data.access_token, data.refresh_token);
 
       processQueue(null, data.access_token);
       originalRequest.headers.Authorization = `Bearer ${data.access_token}`;
       return apiClient(originalRequest);
     } catch (refreshError) {
       processQueue(refreshError, null);
-      await SecureStore.deleteItemAsync(ACCESS_TOKEN_KEY);
-      await SecureStore.deleteItemAsync(REFRESH_TOKEN_KEY);
-      // TODO: redirecionar para tela de login (ex: router.replace('/login'))
+      await tokenStorage.clear();
+      onSessionExpired?.();
       return Promise.reject(refreshError);
     } finally {
       isRefreshing = false;
