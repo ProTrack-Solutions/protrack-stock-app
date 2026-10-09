@@ -131,7 +131,7 @@ export default function NewProductScreen() {
       <ScreenHeader
         title="Novo Produto"
         subtitle="Cadastre novos produtos no estoque."
-        onBack={handleCancel}
+        leading={{ type: "back", onPress: handleCancel }}
       />
 
       <KeyboardAwareScrollView
@@ -216,8 +216,7 @@ export default function NewProductScreen() {
                   disabled={noBarcode}
                   accessibilityRole="button"
                   accessibilityLabel="Ler código de barras com a câmera"
-                  className={`w-12 items-center justify-center rounded-two bg-[#EEF5FF] active:opacity-70 ${noBarcode ? "opacity-40" : ""}`}
-                  style={{ borderWidth: 1, borderColor: "#BFD8FB" }}
+                  className={`w-12 items-center justify-center rounded-two border border-brand-line bg-brand-soft active:opacity-70 ${noBarcode ? "opacity-40" : ""}`}
                 >
                   <Ionicons name="scan-outline" size={22} color={BrandColor} />
                 </Pressable>

@@ -1,4 +1,9 @@
-import type { CreateProductRequest, ProductCategory } from "@/interfaces/product.interface";
+import type {
+  CreateProductRequest,
+  ProductCategory,
+  StockListParams,
+  StockListResponse,
+} from "@/interfaces/product.interface";
 import { apiClient } from "./api.service";
 
 export const ListProductCategories = async () => {
@@ -8,5 +13,19 @@ export const ListProductCategories = async () => {
 
 export const CreateProduct = async (params: CreateProductRequest) => {
   const response = await apiClient.post("/product", params);
+  return response.data;
+};
+
+export const ListStockProducts = async (params: StockListParams, signal?: AbortSignal) => {
+  const response = await apiClient.get<StockListResponse>("/product/company", {
+    params: {
+      page: params.page,
+      perPage: params.perPage,
+      search: params.search,
+      orderBy: params.orderBy,
+      ...(params.startDate && { startDate: params.startDate }),
+    },
+    signal,
+  });
   return response.data;
 };

@@ -2,7 +2,6 @@ import { View } from "react-native";
 
 import { SectionCard } from "@/components/sale/section-card";
 import { ThemedText } from "@/components/themed-text";
-import { BrandColor } from "@/constants/theme";
 import type { TopProduct } from "@/interfaces/dashboard.interface";
 import { formatNumber } from "@/utils/format";
 
@@ -27,11 +26,8 @@ export function TopProductsCard({ products }: { products: TopProduct[] }) {
               </View>
               <View className="h-2 overflow-hidden rounded-full bg-surface">
                 <View
-                  className="h-full rounded-full"
-                  style={{
-                    width: `${max > 0 ? (product.total_sale / max) * 100 : 0}%`,
-                    backgroundColor: BrandColor,
-                  }}
+                  className="h-full rounded-full bg-brand"
+                  style={{ width: `${max > 0 ? (product.total_sale / max) * 100 : 0}%` }}
                 />
               </View>
             </View>

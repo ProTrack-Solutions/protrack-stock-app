@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { FlatList, Pressable, StyleSheet, View } from "react-native";
+import { FlatList, Pressable, View } from "react-native";
 
 import { BottomSheet } from "@/components/sale/bottom-sheet";
 import { ListState } from "@/components/sale/list-state";
@@ -10,7 +10,6 @@ import { BrandColor } from "@/constants/theme";
 import type { ProductCategory } from "@/interfaces/product.interface";
 import { getApiErrorMessage } from "@/service/api.service";
 import { ListProductCategories } from "@/service/product.service";
-import { ERROR_COLOR, INPUT_BORDER } from "./form-field";
 
 type CategorySelectProps = {
   value: ProductCategory | null;
@@ -59,10 +58,11 @@ export function CategorySelect({ value, onChange, error }: CategorySelectProps) 
       <Pressable
         onPress={() => setOpen(true)}
         accessibilityRole="button"
-        className="flex-row items-center justify-between rounded-two bg-[#F6F7F9] px-three py-three active:bg-surface"
-        style={{ borderWidth: 1, borderColor: error ? ERROR_COLOR : INPUT_BORDER }}
+        className={`flex-row items-center justify-between rounded-two border bg-field px-three py-three active:bg-surface ${
+          error ? "border-danger" : "border-line"
+        }`}
       >
-        <ThemedText style={value ? undefined : { color: "#8B8D98" }}>
+        <ThemedText className={value ? undefined : "text-placeholder"}>
           {value?.name ?? "Selecione a categoria"}
         </ThemedText>
         <Ionicons name="chevron-down" size={18} color="#60646C" />
@@ -80,8 +80,7 @@ export function CategorySelect({ value, onChange, error }: CategorySelectProps) 
           renderItem={({ item }) => (
             <Pressable
               onPress={() => select(item)}
-              className="flex-row items-center gap-three py-three active:opacity-60"
-              style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: INPUT_BORDER }}
+              className="flex-row items-center gap-three py-three active:opacity-60 border-b-hairline border-line"
             >
               <View className="h-3 w-3 rounded-full" style={{ backgroundColor: item.color || "#94A3B8" }} />
               <ThemedText className="flex-1">{item.name}</ThemedText>

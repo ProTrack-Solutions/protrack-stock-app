@@ -14,7 +14,7 @@ export function SaleHeader({ date, onBack }: SaleHeaderProps) {
     <ScreenHeader
       title="Nova Venda"
       subtitle="Cadastre uma venda em poucos toques."
-      onBack={onBack}
+      leading={{ type: "back", onPress: onBack }}
       right={
         <View className="flex-row items-center gap-one rounded-full bg-white/[0.18] px-two py-one">
           <View className="h-1.5 w-1.5 rounded-full bg-[#4ADE80]" />

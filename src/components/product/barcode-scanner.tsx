@@ -64,7 +64,7 @@ export function BarcodeScanner({ visible, onClose, onScanned }: BarcodeScannerPr
 
         {permission?.granted && (
           <View pointerEvents="none" className="absolute inset-0 items-center justify-center">
-            <View className="h-40 w-72 rounded-three" style={{ borderWidth: 2, borderColor: "#ffffff" }} />
+            <View className="h-40 w-72 rounded-three border-2 border-white" />
             <ThemedText type="small" className="mt-three text-white">
               Aponte para o código de barras
             </ThemedText>

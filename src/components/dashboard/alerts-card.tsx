@@ -21,10 +21,7 @@ export function AlertsCard({ announcements, onSeeAll }: AlertsCardProps) {
         <View className="gap-two">
           {announcements.map((alert, index) => (
             <View key={index} className="flex-row items-center gap-three rounded-two bg-surface p-three">
-              <View
-                className="h-2 w-2 rounded-full"
-                style={{ backgroundColor: alert.type === "alta" ? "#DC2626" : "#2F855A" }}
-              />
+              <View className={`h-2 w-2 rounded-full ${alert.type === "alta" ? "bg-danger" : "bg-success"}`} />
               <ThemedText type="small" className="flex-1">
                 {alert.title}
               </ThemedText>

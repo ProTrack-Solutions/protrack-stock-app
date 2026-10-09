@@ -2,7 +2,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { Pressable, View } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
-import { BrandColor } from "@/constants/theme";
 
 type CheckboxProps = {
   label: string;
@@ -20,12 +19,9 @@ export function Checkbox({ label, checked, onChange }: CheckboxProps) {
       hitSlop={6}
     >
       <View
-        className="h-5 w-5 items-center justify-center rounded-one"
-        style={{
-          borderWidth: 1.5,
-          borderColor: checked ? BrandColor : "#8B8D98",
-          backgroundColor: checked ? BrandColor : "#ffffff",
-        }}
+        className={`h-5 w-5 items-center justify-center rounded-one border-[1.5px] ${
+          checked ? "border-brand bg-brand" : "border-placeholder bg-paper"
+        }`}
       >
         {checked && <Ionicons name="checkmark" size={14} color="#ffffff" />}
       </View>

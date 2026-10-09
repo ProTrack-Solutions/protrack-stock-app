@@ -65,14 +65,14 @@ export function BalanceCards({ totalReceivable, totalPayable, cashBalance }: Bal
         <MiniCard
           label="A Pagar"
           value={totalPayable}
-          color="#DC2626"
+          colorClass="text-danger"
           icon="card-outline"
           iconColor="#60646C"
         />
         <MiniCard
           label="A Receber"
           value={totalReceivable}
-          color="#2F855A"
+          colorClass="text-success"
           icon="trending-up"
           iconColor="#2F855A"
         />
@@ -84,21 +84,22 @@ export function BalanceCards({ totalReceivable, totalPayable, cashBalance }: Bal
 type MiniCardProps = {
   label: string;
   value: number;
-  color: string;
+  /** Classe de cor do texto, ex: `text-danger`. */
+  colorClass: string;
   icon: keyof typeof Ionicons.glyphMap;
   iconColor: string;
 };
 
-function MiniCard({ label, value, color, icon, iconColor }: MiniCardProps) {
+function MiniCard({ label, value, colorClass, icon, iconColor }: MiniCardProps) {
   return (
     <View className="flex-1 gap-one rounded-three bg-paper p-three">
       <View className="flex-row items-center justify-between">
-        <ThemedText type="small" style={{ color }}>
+        <ThemedText type="small" className={colorClass}>
           {label}
         </ThemedText>
         <Ionicons name={icon} size={18} color={iconColor} />
       </View>
-      <ThemedText className="text-lg font-bold" style={{ color }} numberOfLines={1} adjustsFontSizeToFit>
+      <ThemedText className={`text-lg font-bold ${colorClass}`} numberOfLines={1} adjustsFontSizeToFit>
         {formatCurrency(value)}
       </ThemedText>
     </View>

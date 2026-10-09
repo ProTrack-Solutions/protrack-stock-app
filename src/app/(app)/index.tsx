@@ -16,6 +16,7 @@ import { ThemedText } from "@/components/themed-text";
 import { GradientHeader } from "@/components/ui/gradient-header";
 import { BrandColor } from "@/constants/theme";
 import { useAuth } from "@/contexts/auth-context";
+import { useSideMenu } from "@/contexts/side-menu-context";
 import { useDashboard } from "@/hooks/use-dashboard";
 
 const comingSoon = () => Alert.alert("Em breve", "Esta funcionalidade ainda não está disponível no app.");
@@ -29,6 +30,7 @@ const QUICK_ACTIONS: QuickAction[] = [
 
 export default function HomeScreen() {
   const { user, signOut } = useAuth();
+  const sideMenu = useSideMenu();
   const [signingOut, setSigningOut] = useState(false);
   const { data, loading, refreshing, refresh } = useDashboard();
 
@@ -53,9 +55,20 @@ export default function HomeScreen() {
     <View className="flex-1 bg-surface">
       <GradientHeader className="gap-one">
         <View className="flex-row items-center justify-between">
-          <ThemedText type="small" className="text-white/85">
-            {firstName ? `Olá, ${firstName}` : "Olá"}
-          </ThemedText>
+          <View className="flex-row items-center gap-three">
+            <Pressable
+              onPress={sideMenu.open}
+              hitSlop={8}
+              accessibilityRole="button"
+              accessibilityLabel="Abrir menu"
+              className="h-9 w-9 items-center justify-center rounded-two bg-white/[0.18] active:opacity-70"
+            >
+              <Ionicons name="menu" size={20} color="#ffffff" />
+            </Pressable>
+            <ThemedText type="small" className="text-white/85">
+              {firstName ? `Olá, ${firstName}` : "Olá"}
+            </ThemedText>
+          </View>
           <Pressable
             onPress={confirmSignOut}
             disabled={signingOut}
@@ -105,7 +118,7 @@ export default function HomeScreen() {
           <StockValueCard
             stockCost={data.stockCost}
             inventoryTurnover={data.inventoryTurnover}
-            onSeeDetails={comingSoon}
+            onSeeDetails={() => router.push("/estoque")}
           />
           <AccountsPayableCard summary={data.billsPayable} onManage={comingSoon} />
         </ScrollView>

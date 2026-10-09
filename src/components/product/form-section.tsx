@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import type { ReactNode } from "react";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { LinearGradient } from "@/components/ui/linear-gradient";
@@ -17,8 +17,7 @@ export function FormSection({ title, subtitle, icon, gradient, children }: FormS
   return (
     <View className="gap-three rounded-three bg-paper p-three">
       <View
-        className="flex-row items-center gap-three pb-three"
-        style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: "#E0E1E6" }}
+        className="flex-row items-center gap-three pb-three border-b-hairline border-line"
       >
         <LinearGradient
           colors={gradient}

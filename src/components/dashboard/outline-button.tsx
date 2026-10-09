@@ -12,8 +12,7 @@ export function OutlineButton({ label, onPress }: OutlineButtonProps) {
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
-      className="items-center rounded-two bg-[#F9FAFB] py-three active:bg-surface"
-      style={{ borderWidth: 1, borderColor: "#E0E1E6" }}
+      className="items-center rounded-two bg-gray-50 py-three active:bg-surface border border-line"
     >
       <ThemedText type="smallBold">{label}</ThemedText>
     </Pressable>

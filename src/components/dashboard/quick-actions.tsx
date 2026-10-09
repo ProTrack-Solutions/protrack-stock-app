@@ -9,8 +9,8 @@ import { BrandColor, Gradients } from "@/constants/theme";
 export type QuickAction = {
   label: string;
   icon: keyof typeof Ionicons.glyphMap;
-  /** Cor do ícone e do fundo. Sem `color`, usa o gradiente da marca (ação principal). */
-  color?: { icon: string; background: string };
+  /** Cor do ícone e classe do fundo. Sem `color`, usa o gradiente da marca (ação principal). */
+  color?: { icon: string; backgroundClass: string };
   onPress: () => void;
 };
 
@@ -26,10 +26,7 @@ export function QuickActions({ actions }: { actions: QuickAction[] }) {
             className="flex-1 items-center gap-two active:opacity-70"
           >
             {action.color ? (
-              <View
-                className="h-14 w-14 items-center justify-center rounded-three"
-                style={{ backgroundColor: action.color.background }}
-              >
+              <View className={`h-14 w-14 items-center justify-center rounded-three ${action.color.backgroundClass}`}>
                 <Ionicons name={action.icon} size={24} color={action.color.icon} />
               </View>
             ) : (
@@ -53,7 +50,7 @@ export function QuickActions({ actions }: { actions: QuickAction[] }) {
 }
 
 export const QUICK_ACTION_COLORS = {
-  blue: { icon: BrandColor, background: "#EAF2FE" },
-  purple: { icon: "#7C3AED", background: "#F1ECFD" },
-  cyan: { icon: "#0E7490", background: "#E2F6FB" },
+  blue: { icon: BrandColor, backgroundClass: "bg-[#EAF2FE]" },
+  purple: { icon: "#7C3AED", backgroundClass: "bg-[#F1ECFD]" },
+  cyan: { icon: "#0E7490", backgroundClass: "bg-[#E2F6FB]" },
 };

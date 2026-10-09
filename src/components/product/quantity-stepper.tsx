@@ -20,8 +20,7 @@ export function QuantityStepper({ value, onChangeText, unit }: QuantityStepperPr
     <View className="flex-row gap-two">
       <StepButton icon="remove" label="Diminuir" disabled={quantity <= 0} onPress={() => step(-1)} />
       <View
-        className="flex-1 flex-row items-center rounded-two bg-[#F6F7F9] px-three"
-        style={{ borderWidth: 1, borderColor: "#E0E1E6" }}
+        className="flex-1 flex-row items-center rounded-two bg-field px-three border border-line"
       >
         <TextInput
           value={value}
@@ -33,7 +32,7 @@ export function QuantityStepper({ value, onChangeText, unit }: QuantityStepperPr
           className="flex-1 py-three text-center text-base font-bold text-ink"
           accessibilityLabel="Quantidade em estoque"
         />
-        <ThemedText type="small" className="text-xs" style={{ color: "#5B6B8C" }}>
+        <ThemedText type="small" className="text-xs text-[#5B6B8C]">
           {unit}
         </ThemedText>
       </View>
@@ -59,8 +58,7 @@ function StepButton({
       disabled={disabled}
       accessibilityRole="button"
       accessibilityLabel={label}
-      className={`w-12 items-center justify-center rounded-two bg-paper active:bg-surface ${disabled ? "opacity-40" : ""}`}
-      style={{ borderWidth: 1, borderColor: "#E0E1E6" }}
+      className={`w-12 items-center justify-center rounded-two border border-line bg-paper active:bg-surface ${disabled ? "opacity-40" : ""}`}
     >
       <Ionicons name={icon} size={20} color="#000000" />
     </Pressable>

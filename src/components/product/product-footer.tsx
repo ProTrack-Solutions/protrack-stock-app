@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, View } from "react-native";
+import { Pressable, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { GradientButton } from "@/components/login/gradient-button";
@@ -16,17 +16,12 @@ export function ProductFooter({ submitting, onCancel, onSubmit }: ProductFooterP
 
   return (
     <View
-      className="flex-row gap-three bg-paper px-four pt-three"
-      style={{
-        paddingBottom: insets.bottom + Spacing.three,
-        borderTopWidth: StyleSheet.hairlineWidth,
-        borderColor: "#E0E1E6",
-      }}
+      className="flex-row gap-three border-t-hairline border-line bg-paper px-four pt-three"
+      style={{ paddingBottom: insets.bottom + Spacing.three }}
     >
       <Pressable
         onPress={onCancel}
-        className="items-center justify-center rounded-two bg-paper px-four active:bg-surface"
-        style={{ borderWidth: 1, borderColor: "#E0E1E6" }}
+        className="items-center justify-center rounded-two bg-paper px-four active:bg-surface border border-line"
         accessibilityRole="button"
       >
         <ThemedText type="smallBold">Cancelar</ThemedText>

@@ -4,8 +4,8 @@ import { TextInput, View, type TextInputProps } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 
-export const INPUT_BORDER = "#E0E1E6";
-export const ERROR_COLOR = "#DC2626";
+/** Cor do placeholder (`placeholderTextColor` não aceita classe). Igual ao token `placeholder`. */
+export const PLACEHOLDER_COLOR = "#8B8D98";
 
 type FieldLabelProps = {
   label: string;
@@ -19,7 +19,7 @@ export function FormLabel({ label, required, icon }: FieldLabelProps) {
       {icon && <Ionicons name={icon} size={14} color="#000000" />}
       <ThemedText type="smallBold">
         {label}
-        {required && <ThemedText type="smallBold" style={{ color: "#F43F5E" }}> *</ThemedText>}
+        {required && <ThemedText className="text-rose-500" type="smallBold"> *</ThemedText>}
       </ThemedText>
     </View>
   );
@@ -28,7 +28,7 @@ export function FormLabel({ label, required, icon }: FieldLabelProps) {
 export function FieldError({ message }: { message?: string }) {
   if (!message) return null;
   return (
-    <ThemedText type="small" className="text-xs" style={{ color: ERROR_COLOR }}>
+    <ThemedText type="small" className="text-xs text-danger">
       {message}
     </ThemedText>
   );
@@ -46,9 +46,8 @@ export function FormInput({ error, prefix, suffix, editable = true, multiline, c
   return (
     <View
       className={`flex-row gap-two rounded-two px-three ${multiline ? "items-start py-three" : "items-center"} ${
-        editable ? "bg-[#F6F7F9]" : "bg-surface opacity-60"
-      }`}
-      style={{ borderWidth: 1, borderColor: error ? ERROR_COLOR : INPUT_BORDER }}
+        editable ? "bg-field" : "bg-surface opacity-60"
+      } border ${error ? "border-danger" : "border-line"}`}
     >
       {prefix && (
         <ThemedText type="small" themeColor="textSecondary">
@@ -56,7 +55,7 @@ export function FormInput({ error, prefix, suffix, editable = true, multiline, c
         </ThemedText>
       )}
       <TextInput
-        placeholderTextColor="#8B8D98"
+        placeholderTextColor={PLACEHOLDER_COLOR}
         editable={editable}
         multiline={multiline}
         className={["flex-1 text-base text-ink", multiline ? "min-h-16" : "py-three", className]

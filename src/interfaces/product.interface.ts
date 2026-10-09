@@ -26,3 +26,41 @@ export interface CreateProductRequest {
   sell_in_bulk: boolean;
   unit: UnitOfMeasure;
 }
+
+/** Item de GET /product/company. */
+export interface StockProduct {
+  id: string;
+  category_id: string;
+  category_name: string;
+  name: string;
+  description: string;
+  barcode: string;
+  quantity: number;
+  size: string;
+  cost_price: number;
+  sale_price: number;
+  sell_in_bulk: boolean;
+  unit: UnitOfMeasure;
+  created_at: string;
+}
+
+/** GET /product/company — lista paginada com os totais do estoque da empresa. */
+export interface StockListResponse {
+  data: StockProduct[] | null;
+  page: number;
+  per_page: number;
+  total_rows: number;
+  total_pages: number;
+  total_value_in_stock: number;
+  itens_in_stock: number;
+  low_itens_in_stock: number;
+}
+
+export interface StockListParams {
+  page: number;
+  perPage: number;
+  search: string;
+  orderBy: "asc" | "desc";
+  /** yyyy-MM-dd — produtos cadastrados a partir dessa data. */
+  startDate?: string;
+}

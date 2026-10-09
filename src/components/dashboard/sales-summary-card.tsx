@@ -34,10 +34,7 @@ export function SalesSummaryCard({ summary }: { summary: SalesSummary }) {
         </View>
       </View>
       <View className="flex-row items-center gap-two">
-        <View
-          className="rounded-full px-two py-half"
-          style={{ backgroundColor: growth <= 0 ? "#EF4444" : "#22C55E" }}
-        >
+        <View className={`rounded-full px-two py-half ${growth <= 0 ? "bg-red-500" : "bg-green-500"}`}>
           <ThemedText type="smallBold" className="text-xs text-white">
             {growth > 0 ? "+" : ""}
             {Math.round(growth)}%

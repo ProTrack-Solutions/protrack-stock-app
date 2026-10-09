@@ -2,7 +2,6 @@ import { View } from "react-native";
 
 import { SectionCard } from "@/components/sale/section-card";
 import { ThemedText } from "@/components/themed-text";
-import { BrandColor } from "@/constants/theme";
 import { formatCurrency, formatPercent } from "@/utils/format";
 import { OutlineButton } from "./outline-button";
 
@@ -30,8 +29,8 @@ export function StockValueCard({ stockCost, inventoryTurnover, onSeeDetails }: S
         </View>
         <View className="h-2 overflow-hidden rounded-full bg-surface">
           <View
-            className="h-full rounded-full"
-            style={{ width: `${progress}%`, backgroundColor: BrandColor }}
+            className="h-full rounded-full bg-brand"
+            style={{ width: `${progress}%` }}
           />
         </View>
       </View>

@@ -17,9 +17,9 @@ type ProductPreviewProps = {
 
 export function ProductPreview({ name, quantity, unit, salePrice, categoryName, size }: ProductPreviewProps) {
   return (
-    <View className="gap-three rounded-three bg-paper p-three" style={{ borderWidth: 1, borderColor: "#E0E1E6" }}>
+    <View className="gap-three rounded-three bg-paper p-three border border-line">
       <View className="flex-row items-center gap-three">
-        <View className="h-10 w-10 items-center justify-center rounded-two bg-[#EEF5FF]">
+        <View className="h-10 w-10 items-center justify-center rounded-two bg-brand-soft">
           <Ionicons name="pricetag-outline" size={20} color={BrandColor} />
         </View>
         <View className="flex-1">
@@ -33,8 +33,8 @@ export function ProductPreview({ name, quantity, unit, salePrice, categoryName, 
       </View>
       {(categoryName || size) && (
         <View className="flex-row flex-wrap gap-two">
-          {categoryName && <Badge label={categoryName} color={BrandColor} background="#EEF5FF" />}
-          {size && <Badge label={`Tam: ${size}`} color="#000000" background="#F0F0F3" />}
+          {categoryName && <Badge label={categoryName} className="bg-brand-soft" textClassName="text-brand" />}
+          {size && <Badge label={`Tam: ${size}`} className="bg-surface" textClassName="text-ink" />}
         </View>
       )}
       <View className="flex-row gap-three">
@@ -50,7 +50,7 @@ export function ProductPreview({ name, quantity, unit, salePrice, categoryName, 
 
 function PreviewStat({ label, value }: { label: string; value: string }) {
   return (
-    <View className="flex-1 gap-half rounded-two p-three" style={{ borderWidth: 1, borderColor: "#E0E1E6" }}>
+    <View className="flex-1 gap-half rounded-two p-three border border-line">
       <ThemedText type="smallBold" themeColor="textSecondary" className="text-[11px] tracking-widest">
         {label}
       </ThemedText>
@@ -61,10 +61,10 @@ function PreviewStat({ label, value }: { label: string; value: string }) {
   );
 }
 
-function Badge({ label, color, background }: { label: string; color: string; background: string }) {
+function Badge({ label, className, textClassName }: { label: string; className: string; textClassName: string }) {
   return (
-    <View className="rounded-full px-two py-half" style={{ backgroundColor: background }}>
-      <ThemedText type="smallBold" className="text-xs" style={{ color }}>
+    <View className={`rounded-full px-two py-half ${className}`}>
+      <ThemedText type="smallBold" className={`text-xs ${textClassName}`}>
         {label}
       </ThemedText>
     </View>
