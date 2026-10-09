@@ -148,7 +148,7 @@ export function SideMenu({ visible, onClose }: SideMenuProps) {
             style={{ paddingTop: insets.top + Spacing.four }}
           >
             <View className="flex-row items-center justify-between">
-              <Logo width={64} color="#ffffff" />
+              <Logo width={64} />
               <Pressable
                 onPress={onClose}
                 hitSlop={8}

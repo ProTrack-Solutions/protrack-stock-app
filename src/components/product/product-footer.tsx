@@ -9,9 +9,11 @@ type ProductFooterProps = {
   submitting: boolean;
   onCancel: () => void;
   onSubmit: () => void;
+  /** Texto do botão principal; padrão: "Cadastrar Produto". */
+  submitLabel?: string;
 };
 
-export function ProductFooter({ submitting, onCancel, onSubmit }: ProductFooterProps) {
+export function ProductFooter({ submitting, onCancel, onSubmit, submitLabel = "Cadastrar Produto" }: ProductFooterProps) {
   const insets = useSafeAreaInsets();
 
   return (
@@ -27,7 +29,7 @@ export function ProductFooter({ submitting, onCancel, onSubmit }: ProductFooterP
         <ThemedText type="smallBold">Cancelar</ThemedText>
       </Pressable>
       <GradientButton
-        label={submitting ? "Cadastrando..." : "Cadastrar Produto"}
+        label={submitting ? "Cadastrando..." : submitLabel}
         icon="checkmark"
         colors={Gradients.primary}
         disabled={submitting}

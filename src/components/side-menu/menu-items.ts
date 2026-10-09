@@ -29,6 +29,13 @@ export const MENU_SECTIONS: MenuSection[] = [
     items: [{ label: "Nova Venda", href: "/nova-venda", icon: "cart-outline", activeIcon: "cart" }],
   },
   {
+    title: "Clientes",
+    module: "customers",
+    items: [
+      { label: "Novo Cliente", href: "/novo-cliente", icon: "person-add-outline", activeIcon: "person-add" },
+    ],
+  },
+  {
     title: "Estoque",
     module: "inventory",
     items: [

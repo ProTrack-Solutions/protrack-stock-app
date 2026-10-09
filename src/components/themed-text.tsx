@@ -26,10 +26,25 @@ const typeClasses: Record<NonNullable<ThemedTextProps['type']>, string> = {
   code: `font-mono text-xs ${Platform.select({ android: 'font-bold' }) ?? 'font-medium'}`,
 };
 
+// Utilitários `text-*` que não são cor (tamanho e alinhamento).
+const NON_COLOR_TEXT = /^(xs|sm|base|lg|[2-9]?xl|left|center|right|justify|start|end|\[\d)/;
+
+/**
+ * Se o `className` já define uma cor de texto, a cor do tema é omitida: no NativeWind
+ * a classe que vence um conflito é a que vem depois na folha de estilos, não no
+ * `className`, então `text-ink` podia sobrescrever ex. `text-danger`.
+ */
+function hasTextColor(className?: string) {
+  return (className ?? '').split(/\s+/).some((token) => {
+    const match = /^(?:[\w-]+:)?text-(.+)$/.exec(token);
+    return match !== null && !NON_COLOR_TEXT.test(match[1]);
+  });
+}
+
 export function ThemedText({ className, type = 'default', themeColor, ...rest }: ThemedTextProps) {
   return (
     <Text
-      className={[themeColorClasses[themeColor ?? 'text'], typeClasses[type], className]
+      className={[hasTextColor(`${typeClasses[type]} ${className ?? ''}`) ? null : themeColorClasses[themeColor ?? 'text'], typeClasses[type], className]
         .filter(Boolean)
         .join(' ')}
       {...rest}

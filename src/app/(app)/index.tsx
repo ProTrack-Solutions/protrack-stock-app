@@ -24,7 +24,7 @@ const comingSoon = () => Alert.alert("Em breve", "Esta funcionalidade ainda não
 const QUICK_ACTIONS: QuickAction[] = [
   { label: "Nova Venda", icon: "cart-outline", onPress: () => router.push("/nova-venda") },
   { label: "Novo Produto", icon: "cube-outline", color: QUICK_ACTION_COLORS.blue, onPress: () => router.push("/novo-produto") },
-  { label: "Novo Cliente", icon: "person-add-outline", color: QUICK_ACTION_COLORS.purple, onPress: comingSoon },
+  { label: "Novo Cliente", icon: "person-add-outline", color: QUICK_ACTION_COLORS.purple, onPress: () => router.push("/novo-cliente") },
   { label: "Caixa", icon: "calculator-outline", color: QUICK_ACTION_COLORS.cyan, onPress: comingSoon },
 ];
 

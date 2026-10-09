@@ -124,6 +124,12 @@ const API_ERRORS: Record<string, string> = {
   "product limit reached for plan": "Você atingiu o limite de produtos do seu plano.",
 };
 
+/** Erros do banco repassados pela API, reconhecidos pelo nome da constraint. */
+const API_ERROR_PATTERNS: [string, string][] = [
+  ["uq_customer_cpf_company", "Já existe um cliente com este CPF."],
+  ["uq_customer_email_company", "Já existe um cliente com este email."],
+];
+
 /** Converte o erro da API (`{ error: string }`) em uma mensagem para o usuário. */
 export function getApiErrorMessage(error: unknown, fallback: string): string {
   if (!isAxiosError(error)) return fallback;
@@ -133,6 +139,8 @@ export function getApiErrorMessage(error: unknown, fallback: string): string {
   const apiMessage = typeof data?.error === "string" ? data.error : "";
 
   if (API_ERRORS[apiMessage]) return API_ERRORS[apiMessage];
+  const pattern = API_ERROR_PATTERNS.find(([key]) => apiMessage.includes(key));
+  if (pattern) return pattern[1];
   if (status === 403) return "Seu usuário não tem acesso a este módulo.";
   return fallback;
 }
