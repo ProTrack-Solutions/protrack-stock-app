@@ -4,6 +4,8 @@ import {
   Customer,
   PaginatedResponse,
   Product,
+  SaleListParams,
+  SaleListResponse,
 } from "@/interfaces/sale.interface";
 import { apiClient } from "./api.service";
 
@@ -27,5 +29,22 @@ export const SearchProducts = async (search: string, signal?: AbortSignal) => {
 
 export const CreateSale = async (params: CreateSaleRequest) => {
   const response = await apiClient.post<CreateSaleResponse>("/sales", params);
+  return response.data;
+};
+
+export const ListSales = async (params: SaleListParams, signal?: AbortSignal) => {
+  const response = await apiClient.get<SaleListResponse>("/sales/complete", {
+    params: {
+      page: params.page,
+      perPage: params.perPage,
+      search: params.search,
+      sortBy: "sale_at",
+      orderBy: params.orderBy,
+      ...(params.saleStatus && { saleStatus: params.saleStatus }),
+      ...(params.paymentMethod && { paymentMethod: params.paymentMethod }),
+      ...(params.saleStartDate && { saleStartDate: params.saleStartDate }),
+    },
+    signal,
+  });
   return response.data;
 };

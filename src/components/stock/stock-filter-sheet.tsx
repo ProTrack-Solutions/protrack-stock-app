@@ -9,12 +9,12 @@ import { BrandColor, Gradients } from "@/constants/theme";
 export type StockOrder = "asc" | "desc";
 export type CreatedPeriod = "all" | "7" | "30" | "90";
 
-const ORDERS: { value: StockOrder; label: string }[] = [
+export const ORDERS: { value: StockOrder; label: string }[] = [
   { value: "asc", label: "Mais antigos primeiro" },
   { value: "desc", label: "Mais recentes primeiro" },
 ];
 
-const PERIODS: { value: CreatedPeriod; label: string }[] = [
+export const PERIODS: { value: CreatedPeriod; label: string }[] = [
   { value: "all", label: "Qualquer data" },
   { value: "7", label: "Últimos 7 dias" },
   { value: "30", label: "Últimos 30 dias" },
@@ -73,7 +73,7 @@ export function StockFilterSheet({
   );
 }
 
-function OptionGroup<T extends string>({
+export function OptionGroup<T extends string>({
   title,
   options,
   value,

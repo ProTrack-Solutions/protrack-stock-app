@@ -26,7 +26,10 @@ export const MENU_SECTIONS: MenuSection[] = [
   {
     title: "Vendas",
     module: "sales",
-    items: [{ label: "Nova Venda", href: "/nova-venda", icon: "cart-outline", activeIcon: "cart" }],
+    items: [
+      { label: "Vendas", href: "/vendas", icon: "receipt-outline", activeIcon: "receipt" },
+      { label: "Nova Venda", href: "/nova-venda", icon: "cart-outline", activeIcon: "cart" },
+    ],
   },
   {
     title: "Clientes",
