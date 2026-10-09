@@ -9,14 +9,14 @@ export type MenuItem = {
   icon: keyof typeof Ionicons.glyphMap;
   /** Ícone quando a rota está ativa. */
   activeIcon: keyof typeof Ionicons.glyphMap;
+  /** A API exige o perfil ADMIN (`RequireRole("ADMIN")`). */
+  adminOnly?: boolean;
 };
 
 export type MenuSection = {
   title: string;
   /** Módulo exigido pela API (`RequireModule`); sem ele, a seção aparece para todos. */
   module?: string;
-  /** A API exige o perfil ADMIN (`RequireRole("ADMIN")`). */
-  adminOnly?: boolean;
   items: MenuItem[];
 };
 
@@ -44,9 +44,15 @@ export const MENU_SECTIONS: MenuSection[] = [
   {
     title: "Financeiro",
     module: "financial",
-    adminOnly: true,
     items: [
-      { label: "Contas a Receber", href: "/contas-receber", icon: "wallet-outline", activeIcon: "wallet" },
+      { label: "Fluxo de Caixa", href: "/fluxo-caixa", icon: "swap-vertical-outline", activeIcon: "swap-vertical" },
+      {
+        label: "Contas a Receber",
+        href: "/contas-receber",
+        icon: "wallet-outline",
+        activeIcon: "wallet",
+        adminOnly: true,
+      },
     ],
   },
   {
@@ -66,7 +72,12 @@ export function canAccess(user: User | null, module?: string) {
   return user.role === "ADMIN" || (user.modules ?? []).includes(module);
 }
 
-export function canSeeSection(user: User | null, section: MenuSection) {
-  if (section.adminOnly && user?.role !== "ADMIN") return false;
-  return canAccess(user, section.module);
+/** Seções liberadas para o usuário, só com os itens que ele pode abrir. */
+export function visibleSections(user: User | null): MenuSection[] {
+  return MENU_SECTIONS.filter((section) => canAccess(user, section.module))
+    .map((section) => ({
+      ...section,
+      items: section.items.filter((item) => !item.adminOnly || user?.role === "ADMIN"),
+    }))
+    .filter((section) => section.items.length > 0);
 }

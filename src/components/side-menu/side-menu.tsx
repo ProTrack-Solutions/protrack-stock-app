@@ -19,7 +19,7 @@ import { LinearGradient } from "@/components/ui/linear-gradient";
 import { Logo } from "@/components/ui/logo";
 import { Gradients, Spacing } from "@/constants/theme";
 import { useAuth } from "@/contexts/auth-context";
-import { canSeeSection, MENU_SECTIONS, type MenuItem } from "./menu-items";
+import { visibleSections, type MenuItem } from "./menu-items";
 
 const DURATION = 220;
 
@@ -115,9 +115,7 @@ export function SideMenu({ visible, onClose }: SideMenuProps) {
     user?.role === "ADMIN"
       ? "Administrador"
       : user?.department_name || "Colaborador";
-  const sections = MENU_SECTIONS.filter((section) =>
-    canSeeSection(user, section),
-  );
+  const sections = visibleSections(user);
 
   return (
     // Modal garante que o menu fique acima das telas do Stack (que são views nativas) e do web.
@@ -248,8 +246,9 @@ function MenuRow({
       accessibilityRole="button"
       accessibilityState={{ selected: active }}
       className={`flex-row items-center gap-three rounded-three p-two ${
-        active ? "bg-paper shadow-sm shadow-black/10" : "active:bg-paper/70"
+        active ? "bg-paper" : "active:bg-paper/70"
       }`}
+      style={active ? styles.activeShadow : undefined}
     >
       {active ? (
         <LinearGradient
@@ -278,6 +277,15 @@ function MenuRow({
 
 // Estilos dos `Animated.View` ficam fora do `className`.
 const styles = StyleSheet.create({
+  // Sombra via `style`: classes `shadow-*` usam variáveis CSS e, adicionadas depois da
+  // primeira renderização, fazem o NativeWind remontar o componente (quebrava a navegação).
+  activeShadow: {
+    shadowColor: "#000000",
+    shadowOpacity: 0.08,
+    shadowRadius: 3,
+    shadowOffset: { width: 0, height: 1 },
+    elevation: 2,
+  },
   backdrop: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: "rgba(0, 0, 0, 0.45)",
