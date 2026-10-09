@@ -3,6 +3,7 @@ import type {
   ProductCategory,
   StockListParams,
   StockListResponse,
+  UpdateProductRequest,
 } from "@/interfaces/product.interface";
 import { apiClient } from "./api.service";
 
@@ -14,6 +15,15 @@ export const ListProductCategories = async () => {
 export const CreateProduct = async (params: CreateProductRequest) => {
   const response = await apiClient.post("/product", params);
   return response.data;
+};
+
+export const UpdateProduct = async (id: string, params: UpdateProductRequest) => {
+  await apiClient.put(`/product/${id}`, params);
+};
+
+/** Exclui o produto (a API faz soft delete; não existe rota para desfazer). */
+export const DeleteProduct = async (id: string) => {
+  await apiClient.delete(`/product/${id}`);
 };
 
 export const ListStockProducts = async (params: StockListParams, signal?: AbortSignal) => {

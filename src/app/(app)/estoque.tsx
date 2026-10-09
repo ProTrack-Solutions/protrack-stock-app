@@ -13,6 +13,7 @@ import {
   type CreatedPeriod,
   type StockOrder,
 } from "@/components/stock/stock-filter-sheet";
+import { StockProductDetailSheet } from "@/components/stock/stock-product-detail-sheet";
 import { StockProductRow } from "@/components/stock/stock-product-row";
 import { StockStats } from "@/components/stock/stock-stats";
 import { ThemedText } from "@/components/themed-text";
@@ -22,7 +23,7 @@ import { BrandColor, Gradients, Spacing } from "@/constants/theme";
 import { useSideMenu } from "@/contexts/side-menu-context";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { LOW_STOCK_LIMIT, useStock } from "@/hooks/use-stock";
-import type { ProductCategory } from "@/interfaces/product.interface";
+import type { ProductCategory, StockProduct } from "@/interfaces/product.interface";
 import { ListProductCategories } from "@/service/product.service";
 
 const HEX_COLOR = /^#[0-9a-f]{6}$/i;
@@ -39,6 +40,7 @@ export default function StockScreen() {
   const [categories, setCategories] = useState<ProductCategory[]>([]);
   const [filterOpen, setFilterOpen] = useState(false);
   const [scannerOpen, setScannerOpen] = useState(false);
+  const [selected, setSelected] = useState<StockProduct | null>(null);
 
   const startDate = useMemo(() => periodStartDate(period), [period]);
   const { products, stats, loading, loadingMore, refreshing, error, refresh, loadMore } = useStock({
@@ -155,7 +157,13 @@ export default function StockScreen() {
             </View>
           ) : null
         }
-        renderItem={({ item }) => <StockProductRow product={item} categoryColor={categoryColors.get(item.category_id)} />}
+        renderItem={({ item }) => (
+          <StockProductRow
+            product={item}
+            categoryColor={categoryColors.get(item.category_id)}
+            onPress={() => setSelected(item)}
+          />
+        )}
       />
 
       <Pressable
@@ -183,6 +191,13 @@ export default function StockScreen() {
           </ThemedText>
         </LinearGradient>
       </Pressable>
+
+      <StockProductDetailSheet
+        product={selected}
+        categoryColor={selected ? categoryColors.get(selected.category_id) : undefined}
+        onClose={() => setSelected(null)}
+        onChanged={refresh}
+      />
 
       <StockFilterSheet
         visible={filterOpen}

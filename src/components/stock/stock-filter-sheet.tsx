@@ -34,6 +34,8 @@ type StockFilterSheetProps = {
   visible: boolean;
   order: StockOrder;
   period: CreatedPeriod;
+  /** Ordem aplicada pelo "Limpar"; padrão: "asc". */
+  defaultOrder?: StockOrder;
   onChangeOrder: (order: StockOrder) => void;
   onChangePeriod: (period: CreatedPeriod) => void;
   onClose: () => void;
@@ -43,6 +45,7 @@ export function StockFilterSheet({
   visible,
   order,
   period,
+  defaultOrder = "asc",
   onChangeOrder,
   onChangePeriod,
   onClose,
@@ -56,7 +59,7 @@ export function StockFilterSheet({
       <View className="flex-row gap-three">
         <Pressable
           onPress={() => {
-            onChangeOrder("asc");
+            onChangeOrder(defaultOrder);
             onChangePeriod("all");
           }}
           className="items-center justify-center rounded-two bg-paper px-four active:bg-surface border border-line"

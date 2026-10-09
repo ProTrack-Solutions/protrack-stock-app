@@ -61,3 +61,13 @@ export interface CreateSaleRequest {
 export interface CreateSaleResponse {
   id: string;
 }
+
+/** Parâmetros para abrir a venda com o cliente já selecionado (ex: a partir da tela de clientes). */
+export type NewSaleParams = {
+  customerId?: string;
+  customerName?: string;
+  customerCpf?: string;
+  customerEmail?: string;
+  customerPhone?: string;
+  customerBalance?: string;
+};

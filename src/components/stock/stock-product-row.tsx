@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { BrandColor } from "@/constants/theme";
@@ -23,15 +23,19 @@ function unitStyle(unit: string) {
 type StockProductRowProps = {
   product: StockProduct;
   categoryColor?: string;
+  onPress: () => void;
 };
 
-export function StockProductRow({ product, categoryColor = "#64748B" }: StockProductRowProps) {
+export function StockProductRow({ product, categoryColor = "#64748B", onPress }: StockProductRowProps) {
   const badge = product.sell_in_bulk ? unitStyle(product.unit) : quantityStyle(product.quantity);
   const unit = product.unit.toLowerCase();
 
   return (
-    <View
-      className="flex-row items-center gap-three rounded-three bg-paper p-three border border-line"
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`Ver detalhes de ${product.name}`}
+      className="flex-row items-center gap-three rounded-three bg-paper p-three border border-line active:bg-surface"
     >
       <View
         className="h-11 w-11 items-center justify-center rounded-two bg-brand-soft border border-brand-line"
@@ -80,6 +84,6 @@ export function StockProductRow({ product, categoryColor = "#64748B" }: StockPro
           </View>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 }

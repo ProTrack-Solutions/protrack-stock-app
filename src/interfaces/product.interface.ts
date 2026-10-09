@@ -27,6 +27,22 @@ export interface CreateProductRequest {
   unit: UnitOfMeasure;
 }
 
+/**
+ * PUT /product/:id — atualização parcial: a API ignora texto vazio e números 0
+ * (mantém o valor atual) e não altera `sell_in_bulk`.
+ */
+export interface UpdateProductRequest {
+  name: string;
+  description: string;
+  category_id: string;
+  barcode: string;
+  quantity: number;
+  size: string;
+  cost_price: number;
+  sale_price: number;
+  unit: UnitOfMeasure;
+}
+
 /** Item de GET /product/company. */
 export interface StockProduct {
   id: string;

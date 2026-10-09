@@ -32,6 +32,7 @@ export const MENU_SECTIONS: MenuSection[] = [
     title: "Clientes",
     module: "customers",
     items: [
+      { label: "Clientes", href: "/clientes", icon: "people-outline", activeIcon: "people" },
       { label: "Novo Cliente", href: "/novo-cliente", icon: "person-add-outline", activeIcon: "person-add" },
     ],
   },
