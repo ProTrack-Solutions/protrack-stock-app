@@ -1,21 +1,42 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { Alert, Pressable, ScrollView, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Alert, Pressable, RefreshControl, ScrollView, View } from "react-native";
 
+import { AccountsPayableCard } from "@/components/dashboard/accounts-payable-card";
+import { AlertsCard } from "@/components/dashboard/alerts-card";
+import { BalanceCards } from "@/components/dashboard/balance-cards";
+import { CashFlowChart } from "@/components/dashboard/cash-flow-chart";
+import { PaymentMethodsChart } from "@/components/dashboard/payment-methods-chart";
+import { QUICK_ACTION_COLORS, QuickActions, type QuickAction } from "@/components/dashboard/quick-actions";
+import { SalesSummaryCard } from "@/components/dashboard/sales-summary-card";
+import { StockValueCard } from "@/components/dashboard/stock-value-card";
+import { TopProductsCard } from "@/components/dashboard/top-products-card";
 import { ThemedText } from "@/components/themed-text";
-import { LinearGradient } from "@/components/ui/linear-gradient";
+import { GradientHeader } from "@/components/ui/gradient-header";
+import { DashboardSkeleton } from "@/components/dashboard/dashboard-skeleton";
+import { BrandColor } from "@/constants/theme";
 import { useAuth } from "@/contexts/auth-context";
-import { BrandColor, Gradients, Spacing } from "@/constants/theme";
+import { useSideMenu } from "@/contexts/side-menu-context";
+import { useDashboard } from "@/hooks/use-dashboard";
+
+const comingSoon = () => Alert.alert("Em breve", "Esta funcionalidade ainda não está disponível no app.");
+
+const QUICK_ACTIONS: QuickAction[] = [
+  { label: "Nova Venda", icon: "cart-outline", onPress: () => router.push("/nova-venda") },
+  { label: "Novo Produto", icon: "cube-outline", color: QUICK_ACTION_COLORS.blue, onPress: () => router.push("/novo-produto") },
+  { label: "Novo Cliente", icon: "person-add-outline", color: QUICK_ACTION_COLORS.purple, onPress: () => router.push("/novo-cliente") },
+  { label: "Caixa", icon: "calculator-outline", color: QUICK_ACTION_COLORS.cyan, onPress: comingSoon },
+];
 
 export default function HomeScreen() {
   const { user, signOut } = useAuth();
-  const insets = useSafeAreaInsets();
+  const sideMenu = useSideMenu();
   const [signingOut, setSigningOut] = useState(false);
+  const { data, loading, refreshing, refresh } = useDashboard();
 
   const firstName = user?.name?.split(" ")[0];
+  const cashBalance = data?.cashFlow.reduce((sum, d) => sum + d.total_inflow - d.total_outflow, 0) ?? 0;
 
   const confirmSignOut = () => {
     Alert.alert("Sair da conta?", "Você precisará entrar novamente.", [
@@ -33,18 +54,22 @@ export default function HomeScreen() {
 
   return (
     <View className="flex-1 bg-surface">
-      <StatusBar style="light" />
-      <LinearGradient
-        colors={Gradients.brand}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        className="gap-one rounded-b-four px-four pb-four"
-        style={{ paddingTop: insets.top + Spacing.four }}
-      >
+      <GradientHeader className="gap-one">
         <View className="flex-row items-center justify-between">
-          <ThemedText type="small" className="text-white/85">
-            {firstName ? `Olá, ${firstName}` : "Olá"}
-          </ThemedText>
+          <View className="flex-row items-center gap-three">
+            <Pressable
+              onPress={sideMenu.open}
+              hitSlop={8}
+              accessibilityRole="button"
+              accessibilityLabel="Abrir menu"
+              className="h-9 w-9 items-center justify-center rounded-two bg-white/[0.18] active:opacity-70"
+            >
+              <Ionicons name="menu" size={20} color="#ffffff" />
+            </Pressable>
+            <ThemedText type="small" className="text-white/85">
+              {firstName ? `Olá, ${firstName}` : "Olá"}
+            </ThemedText>
+          </View>
           <Pressable
             onPress={confirmSignOut}
             disabled={signingOut}
@@ -67,29 +92,38 @@ export default function HomeScreen() {
             {user.department_name}
           </ThemedText>
         ) : null}
-      </LinearGradient>
+      </GradientHeader>
 
-      <ScrollView contentContainerClassName="w-full max-w-content self-center gap-three p-four">
-        <ThemedText type="smallBold" themeColor="textSecondary">
-          Ações rápidas
-        </ThemedText>
-        <Pressable
-          onPress={() => router.push("/nova-venda")}
-          accessibilityRole="button"
-          className="flex-row items-center gap-three rounded-three bg-paper p-three active:opacity-80"
+      {loading || !data ? (
+        <ScrollView scrollEnabled={false}>
+          <DashboardSkeleton />
+        </ScrollView>
+      ) : (
+        <ScrollView
+          contentContainerClassName="w-full max-w-content self-center gap-three p-four"
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor={BrandColor} />
+          }
         >
-          <View className="h-11 w-11 items-center justify-center rounded-two bg-[#EEF5FF]">
-            <Ionicons name="cart-outline" size={22} color={BrandColor} />
-          </View>
-          <View className="flex-1">
-            <ThemedText className="font-bold">Nova Venda</ThemedText>
-            <ThemedText type="small" themeColor="textSecondary">
-              Cadastre uma venda em poucos toques
-            </ThemedText>
-          </View>
-          <Ionicons name="chevron-forward" size={18} color="#60646C" />
-        </Pressable>
-      </ScrollView>
+          <BalanceCards
+            totalReceivable={data.totalReceivable}
+            totalPayable={data.totalPayable}
+            cashBalance={cashBalance}
+          />
+          <QuickActions actions={QUICK_ACTIONS} />
+          <SalesSummaryCard summary={data.salesSummary} />
+          <AlertsCard announcements={data.announcements} onSeeAll={comingSoon} />
+          <CashFlowChart data={data.cashFlow} />
+          <TopProductsCard products={data.topProducts} />
+          <PaymentMethodsChart stats={data.paymentMethods} />
+          <StockValueCard
+            stockCost={data.stockCost}
+            inventoryTurnover={data.inventoryTurnover}
+            onSeeDetails={() => router.push("/estoque")}
+          />
+          <AccountsPayableCard summary={data.billsPayable} onManage={comingSoon} />
+        </ScrollView>
+      )}
     </View>
   );
 }

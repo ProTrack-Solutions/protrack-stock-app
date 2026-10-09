@@ -31,3 +31,13 @@ export function formatShortDate(date: Date) {
   const day = String(date.getDate()).padStart(2, "0");
   return `${day} de ${MONTHS[date.getMonth()].slice(0, 3)}.`;
 }
+
+/** 4790 -> "4.790" */
+export function formatNumber(value: number) {
+  return Math.round(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+/** 27.654 -> "27,65%" */
+export function formatPercent(value: number, decimals = 2) {
+  return `${value.toFixed(decimals).replace(".", ",")}%`;
+}

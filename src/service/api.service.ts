@@ -1,5 +1,6 @@
 import axios, {
   AxiosError,
+  isAxiosError,
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios";
@@ -113,3 +114,35 @@ apiClient.interceptors.response.use(
     }
   },
 );
+
+const API_ERRORS: Record<string, string> = {
+  "insufficient quantity": "Estoque insuficiente para um dos produtos.",
+  "discount amount cannot exceed subtotal": "O desconto não pode ser maior que o subtotal.",
+  "customer_id is required for installment sales": "Selecione um cliente para vendas no crediário.",
+  "the sale must have at least one item": "Adicione pelo menos um produto à venda.",
+  "categoria informada não existe": "A categoria selecionada não existe mais. Escolha outra.",
+  "product limit reached for plan": "Você atingiu o limite de produtos do seu plano.",
+  "The amount entered is greater than the outstanding balance.":
+    "O valor informado é maior que o saldo devedor do cliente.",
+};
+
+/** Erros do banco repassados pela API, reconhecidos pelo nome da constraint. */
+const API_ERROR_PATTERNS: [string, string][] = [
+  ["uq_customer_cpf_company", "Já existe um cliente com este CPF."],
+  ["uq_customer_email_company", "Já existe um cliente com este email."],
+];
+
+/** Converte o erro da API (`{ error: string }`) em uma mensagem para o usuário. */
+export function getApiErrorMessage(error: unknown, fallback: string): string {
+  if (!isAxiosError(error)) return fallback;
+  if (!error.response) return "Não foi possível conectar ao servidor. Verifique sua internet.";
+
+  const { status, data } = error.response;
+  const apiMessage = typeof data?.error === "string" ? data.error : "";
+
+  if (API_ERRORS[apiMessage]) return API_ERRORS[apiMessage];
+  const pattern = API_ERROR_PATTERNS.find(([key]) => apiMessage.includes(key));
+  if (pattern) return pattern[1];
+  if (status === 403) return "Seu usuário não tem acesso a este módulo.";
+  return fallback;
+}

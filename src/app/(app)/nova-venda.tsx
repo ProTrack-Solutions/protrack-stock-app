@@ -1,6 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { router, type Href } from "expo-router";
-import { StatusBar } from "expo-status-bar";
+import { router, useLocalSearchParams, type Href } from "expo-router";
 import { useState } from "react";
 import { Alert, Pressable, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
@@ -18,20 +17,35 @@ import { ThemedText } from "@/components/themed-text";
 import {
   CreateSaleRequest,
   Customer,
+  NewSaleParams,
   PaymentMethod,
   Product,
   SaleItem,
 } from "@/interfaces/sale.interface";
-import { CreateSale, getApiErrorMessage } from "@/service/sale.service";
+import { getApiErrorMessage } from "@/service/api.service";
+import { CreateSale } from "@/service/sale.service";
 import { formatLongDate } from "@/utils/format";
 
 const round2 = (value: number) => Math.round(value * 100) / 100;
 
 type FormErrors = Partial<Record<"customer" | "installments" | "dueDay" | "downPayment", string>>;
 
+function customerFromParams(params: NewSaleParams): Customer | null {
+  if (!params.customerId || !params.customerName) return null;
+  return {
+    id: params.customerId,
+    full_name: params.customerName,
+    cpf: params.customerCpf ?? "",
+    email: params.customerEmail ?? "",
+    mobile_phone: params.customerPhone ?? "",
+    balance_due: Number(params.customerBalance) || 0,
+  };
+}
+
 export default function NewSaleScreen() {
   const [date] = useState(() => new Date());
-  const [customer, setCustomer] = useState<Customer | null>(null);
+  const params = useLocalSearchParams<NewSaleParams>();
+  const [customer, setCustomer] = useState<Customer | null>(() => customerFromParams(params));
   const [items, setItems] = useState<SaleItem[]>([]);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash");
   const [discountText, setDiscountText] = useState("0");
@@ -140,7 +154,6 @@ export default function NewSaleScreen() {
 
   return (
     <View className="flex-1 bg-surface">
-      <StatusBar style="dark" />
       <SaleHeader date={date} onBack={handleCancel} />
 
       <KeyboardAwareScrollView
