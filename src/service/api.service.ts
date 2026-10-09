@@ -122,6 +122,8 @@ const API_ERRORS: Record<string, string> = {
   "the sale must have at least one item": "Adicione pelo menos um produto à venda.",
   "categoria informada não existe": "A categoria selecionada não existe mais. Escolha outra.",
   "product limit reached for plan": "Você atingiu o limite de produtos do seu plano.",
+  "The amount entered is greater than the outstanding balance.":
+    "O valor informado é maior que o saldo devedor do cliente.",
 };
 
 /** Erros do banco repassados pela API, reconhecidos pelo nome da constraint. */

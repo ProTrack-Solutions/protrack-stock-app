@@ -19,7 +19,7 @@ import { LinearGradient } from "@/components/ui/linear-gradient";
 import { Logo } from "@/components/ui/logo";
 import { Gradients, Spacing } from "@/constants/theme";
 import { useAuth } from "@/contexts/auth-context";
-import { canAccess, MENU_SECTIONS, type MenuItem } from "./menu-items";
+import { canSeeSection, MENU_SECTIONS, type MenuItem } from "./menu-items";
 
 const DURATION = 220;
 
@@ -116,7 +116,7 @@ export function SideMenu({ visible, onClose }: SideMenuProps) {
       ? "Administrador"
       : user?.department_name || "Colaborador";
   const sections = MENU_SECTIONS.filter((section) =>
-    canAccess(user, section.module),
+    canSeeSection(user, section),
   );
 
   return (

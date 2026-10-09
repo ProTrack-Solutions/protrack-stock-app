@@ -15,6 +15,8 @@ export type MenuSection = {
   title: string;
   /** Módulo exigido pela API (`RequireModule`); sem ele, a seção aparece para todos. */
   module?: string;
+  /** A API exige o perfil ADMIN (`RequireRole("ADMIN")`). */
+  adminOnly?: boolean;
   items: MenuItem[];
 };
 
@@ -40,6 +42,14 @@ export const MENU_SECTIONS: MenuSection[] = [
     ],
   },
   {
+    title: "Financeiro",
+    module: "financial",
+    adminOnly: true,
+    items: [
+      { label: "Contas a Receber", href: "/contas-receber", icon: "wallet-outline", activeIcon: "wallet" },
+    ],
+  },
+  {
     title: "Estoque",
     module: "inventory",
     items: [
@@ -54,4 +64,9 @@ export function canAccess(user: User | null, module?: string) {
   if (!module) return true;
   if (!user) return false;
   return user.role === "ADMIN" || (user.modules ?? []).includes(module);
+}
+
+export function canSeeSection(user: User | null, section: MenuSection) {
+  if (section.adminOnly && user?.role !== "ADMIN") return false;
+  return canAccess(user, section.module);
 }
