@@ -1,6 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router, type Href } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import { Alert, Pressable, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
@@ -22,7 +21,8 @@ import {
   Product,
   SaleItem,
 } from "@/interfaces/sale.interface";
-import { CreateSale, getApiErrorMessage } from "@/service/sale.service";
+import { getApiErrorMessage } from "@/service/api.service";
+import { CreateSale } from "@/service/sale.service";
 import { formatLongDate } from "@/utils/format";
 
 const round2 = (value: number) => Math.round(value * 100) / 100;
@@ -140,7 +140,6 @@ export default function NewSaleScreen() {
 
   return (
     <View className="flex-1 bg-surface">
-      <StatusBar style="dark" />
       <SaleHeader date={date} onBack={handleCancel} />
 
       <KeyboardAwareScrollView

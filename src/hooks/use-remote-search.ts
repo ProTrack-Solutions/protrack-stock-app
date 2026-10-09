@@ -2,7 +2,7 @@ import { isCancel } from "axios";
 import { useEffect, useState } from "react";
 
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
-import { getApiErrorMessage } from "@/service/sale.service";
+import { getApiErrorMessage } from "@/service/api.service";
 
 /**
  * Busca na API conforme o usuário digita (com debounce) enquanto `enabled`
