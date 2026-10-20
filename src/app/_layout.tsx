@@ -4,6 +4,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 
 import { AnimatedSplashOverlay } from "@/components/animated-icon";
+import { LiquidTransitionProvider } from "@/components/transition/liquid-transition";
 import { AuthProvider, useAuth } from "@/contexts/auth-context";
 
 import "../../global.css";
@@ -15,7 +16,9 @@ export default function RootLayout() {
     <KeyboardProvider>
       <AuthProvider>
         <ThemeProvider value={DefaultTheme}>
-          <RootNavigator />
+          <LiquidTransitionProvider>
+            <RootNavigator />
+          </LiquidTransitionProvider>
         </ThemeProvider>
       </AuthProvider>
     </KeyboardProvider>

@@ -18,7 +18,15 @@ type AuthStatus = "loading" | "authenticated" | "unauthenticated";
 type AuthContextValue = {
   status: AuthStatus;
   user: User | null;
-  signIn: (email: string, password: string) => Promise<void>;
+  /**
+   * `beforeEnter` roda depois de autenticar e antes de trocar para as rotas
+   * protegidas (ex: cobrir a tela com a transição).
+   */
+  signIn: (
+    email: string,
+    password: string,
+    options?: { beforeEnter?: () => Promise<void> },
+  ) => Promise<void>;
   signOut: () => Promise<void>;
 };
 
@@ -58,17 +66,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => setSessionExpiredHandler(null);
   }, [endSession]);
 
-  const signIn = useCallback(async (email: string, password: string) => {
-    const tokens = await Login({ email, password, aud: AUTH_AUDIENCE });
-    await tokenStorage.save(tokens.access_token, tokens.refresh_token);
-    try {
-      setUser(await GetMe());
-    } catch (error) {
-      await tokenStorage.clear();
-      throw error;
-    }
-    setStatus("authenticated");
-  }, []);
+  const signIn = useCallback(
+    async (
+      email: string,
+      password: string,
+      options?: { beforeEnter?: () => Promise<void> },
+    ) => {
+      const tokens = await Login({ email, password, aud: AUTH_AUDIENCE });
+      await tokenStorage.save(tokens.access_token, tokens.refresh_token);
+      try {
+        setUser(await GetMe());
+      } catch (error) {
+        await tokenStorage.clear();
+        throw error;
+      }
+      await options?.beforeEnter?.();
+      setStatus("authenticated");
+    },
+    [],
+  );
 
   const signOut = useCallback(async () => {
     try {
@@ -90,6 +106,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth deve ser usado dentro de <AuthProvider>");
+  if (!context)
+    throw new Error("useAuth deve ser usado dentro de <AuthProvider>");
   return context;
 }
