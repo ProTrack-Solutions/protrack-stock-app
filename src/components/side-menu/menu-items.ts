@@ -53,6 +53,13 @@ export const MENU_SECTIONS: MenuSection[] = [
         activeIcon: "wallet",
         adminOnly: true,
       },
+      {
+        label: "Contas a Pagar",
+        href: "/contas-pagar",
+        icon: "document-text-outline",
+        activeIcon: "document-text",
+        adminOnly: true,
+      },
     ],
   },
   {

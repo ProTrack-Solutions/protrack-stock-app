@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "protrack-stock-app",
+    "name": "ProTrack Gerencial",
     "slug": "protrack-stock-app",
+    "owner": "protrack-solutions",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -19,7 +20,10 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.anonymous.protrackstockapp"
+      "package": "com.anonymous.protrackstockapp",
+      "permissions": [
+        "android.permission.CAMERA"
+      ]
     },
     "web": {
       "output": "static",
@@ -49,6 +53,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "db33b2ab-c58d-473f-bae0-44a4485097ff"
+      }
     }
   }
 }

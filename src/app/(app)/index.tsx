@@ -26,7 +26,7 @@ const QUICK_ACTIONS: QuickAction[] = [
   { label: "Nova Venda", icon: "cart-outline", onPress: () => router.push("/nova-venda") },
   { label: "Novo Produto", icon: "cube-outline", color: QUICK_ACTION_COLORS.blue, onPress: () => router.push("/novo-produto") },
   { label: "Novo Cliente", icon: "person-add-outline", color: QUICK_ACTION_COLORS.purple, onPress: () => router.push("/novo-cliente") },
-  { label: "Caixa", icon: "calculator-outline", color: QUICK_ACTION_COLORS.cyan, onPress: comingSoon },
+  { label: "Caixa", icon: "calculator-outline", color: QUICK_ACTION_COLORS.cyan, onPress: () => router.push("/fluxo-caixa") },
 ];
 
 export default function HomeScreen() {
@@ -121,7 +121,7 @@ export default function HomeScreen() {
             inventoryTurnover={data.inventoryTurnover}
             onSeeDetails={() => router.push("/estoque")}
           />
-          <AccountsPayableCard summary={data.billsPayable} onManage={comingSoon} />
+          <AccountsPayableCard summary={data.billsPayable} onManage={() => router.push("/contas-pagar")} />
         </ScrollView>
       )}
     </View>
